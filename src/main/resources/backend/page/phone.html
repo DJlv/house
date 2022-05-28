@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ZZBQ</title>
+
+  <!--引入 element js css-->
+
+
+    <!-- <script type="text/javascript"  th:src="@{js/vue.js}"></script>
+    <link rel="stylesheet" th:href="@{element-ui/lib/theme-chalk/index.css}">
+    <script type="text/javascript" th:src="@{element-ui/lib/index.js}"></script>
+    <script type="text/javascript"  th:src="@{js/axios-0.18.0.js}"></script> -->
+
+</head>
+<body>
+<div id="app">
+
+  <el-container style="height: 2000px; border: 1px solid #f4f4f5">
+    <el-aside width="250px" >
+      <el-menu :default-openeds="['1']">
+  
+        <el-submenu index="1" style="font-size: 80px;">
+          <template slot="title">
+            <i class="el-icon-menu" style="font-size: 80px;"></i>导航</template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">文件</el-menu-item>
+            <el-menu-item index="1-2">库存</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
+    </el-aside>
+    
+    <el-container>
+      <el-header style="text-align:center ;font-size: 16px; width: 1700px; height: 90px;">
+
+        <a style="text-align:center ;width: 500px;font-size: 80px;">仓库管理</a>
+
+        
+      </el-header>
+
+
+      <div class="add-from">
+        <el-dialog
+          title=""
+          :visible.sync="dialogVisible"
+          width="40%"
+          :before-close="a">
+          <h1 style="font-size: 36px;text-align: center">添加备件</h1>
+          <from ref="dataAddfrom" :model="formData">
+            <input type="text" placeholder="添加序号" v-model="formData.id"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加库位" v-model="formData.storagelocation"></input><br>
+            <input type="text" placeholder="添加物料编号" v-model="formData.stocknumber"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加物料名称" v-model="formData.materialname"></input><br>
+            <input type="text" placeholder="添加规格型号" v-model="formData.specifications"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加品牌" v-model="formData.brand"></input><br>
+            <input type="text" placeholder="添加单位" v-model="formData.unit"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加库存数量" v-model="formData.quantity"></input><br>
+            <input type="text" placeholder="添加金额总计" v-model="formData.totalamount"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加最低库存" v-model="formData.minimumstock"></input><br>
+            <input type="text" placeholder="添加保质期限" v-model="formData.quality"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加备件属性" v-model="formData.spare"></input><br>
+            <input type="text" placeholder="添加备件类别" v-model="formData.category"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="添加备注" v-model="formData.remarks"></input><br>
+
+          </from>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="Submit">确 定</el-button>
+            </span>
+        </el-dialog>
+      </div>
+
+      <el-main style="width: 1700px;">
+        <template>
+          <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="700">
+            <el-table-column
+              fixed
+              prop="id"
+              label="序号"
+              style="text-align: center" >
+            </el-table-column>
+            <el-table-column
+              prop="storagelocation"
+              label="库位"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              prop="materialname"
+              label="物料名称"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="specifications"
+              label="规格型号"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="brand"
+              label="品牌"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="unit"
+              label="单位"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="quantity"
+              label="库存数量"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="category"
+              label="备件类别"
+              >
+            </el-table-column>
+
+            <el-table-column
+            fixed
+            prop=""
+            label="操作"
+            >
+               <template slot-scope="scope">
+                 <el-button type="danger"  @click="delectbyid(scope.row)">删除</el-button>
+
+               </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-main>
+
+
+
+      <el-footer>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline" style="height: 50px;">
+          <el-form-item label="" >
+            <el-input v-model="formInline.name" placeholder="输入查询名称"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="button" @click="handleClose">添加</el-button>
+          </el-form-item>
+          
+        </el-form>
+
+      </el-footer>
+      
+    </el-container>
+  </el-container>
+  
+</div>
+<!--引入vue.js-->
+<script type="text/javascript"  src="../js/vue.js"></script>
+
+<!--引入 element js css-->
+<link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+<script type="text/javascript"  src="../js/axios-0.18.0.js"></script>
+<!--<script type="text/javascript" src="js/login.js"></script>-->
+<style>
+   .el-header {
+     
+    background-color:#B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+  
+  .el-aside {
+  
+    /* background-color:#B3C0D1; */
+    color: #333;
+  }
+ 
+  input{
+    width: 300px;
+    height: 50px;
+  }
+</style>
+
+
+
+<script>
+  var app=new  Vue({
+    el:"#app",
+    // mounted () {
+    //   this.selectall();
+    // },
+    created(){
+      this.getAll();
+    },
+    methods: {
+      getAll()
+      {
+        // console.log("run")
+        axios.get("/house").then((res)=>{
+          // console.log(res.data)
+          this.tableData=res.data.data;
+        })
+      },
+      delectbyid(row){
+        axios.delete("/house/"+row.id).then((res)=>{
+          // console.log(res.data)
+          this.getAll();
+        })
+      },
+      onSubmit() {
+        console.log('submit!');
+        axios.get("/house/"+this.formInline.name).then((res)=>{
+          // console.log(res.data)
+          this.tableData=res.data.data;
+        })
+      },
+      handleClose(done) {
+        this.dialogVisible=true;
+      },
+      a(){
+        this.dialogVisible=false;
+      },
+      Submit() {
+        console.log('submit!');
+        axios.post("/house/",this.formData).then((res)=>{
+          // console.log(res.data)
+          this.dialogVisible=false;
+          this.tableData=res.data.data;
+          this.getAll();
+
+        })
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+      }
+    },
+    data() {
+      // const item = {
+      //   date: '2016-05-03',
+      //     name: '王小虎',
+      //     province: '上海',
+      //     city: '普陀区',
+      //     address: '上海市普陀区金沙江路 1518 弄',
+      //     zip: 200333
+      // };
+        return {
+          dialogVisible: false,
+          tableData: [],
+          formInline: {
+          name: '',
+          region: ''
+        },
+          formData:{
+            id:'1',
+            storagelocation:'',
+            stocknumber:'',
+            materialname:'',
+            specifications:'',
+            brand:'',
+            unit:'',
+            quantity:'',
+            totalamount:'',
+            minimumstock:'',
+            quality:'',
+            spare:'',
+            category:'',
+            remarks:'',
+          }
+      }
+      
+    }
+  });
+  
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+
+server:
+  port: 8080
+#  address: 118.31.40.151
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tbl_
+      id-type: auto
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test?serverTimezone=UTC&useSSL=false
+      username: root
+      password: 1234
+
+#spring.thymeleaf.prefix: classpath:/templates/  前端框架,目前还不太会用,不过这两行代码很明显了,就是说我的文件是去哪里找,这文件是html就完事了
+#spring.thymeleaf.suffix: .html

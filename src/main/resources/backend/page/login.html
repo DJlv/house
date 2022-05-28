@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZZBQ</title>
+
+    <!--引入 element js css-->
+
+
+    <!-- <script type="text/javascript"  th:src="@{js/vue.js}"></script>
+    <link rel="stylesheet" th:href="@{element-ui/lib/theme-chalk/index.css}">
+    <script type="text/javascript" th:src="@{element-ui/lib/index.js}"></script>
+    <script type="text/javascript"  th:src="@{js/axios-0.18.0.js}"></script> -->
+
+</head>
+<body>
+<div id="app" style="height: 650px">
+
+    <template>
+        <div>
+            <!--flex弹性盒子模型，justify-content：主抽 -->
+            <div style="display: flex;justify-content: center;margin-top: 300px">
+                <el-card style="width: 400px">
+                    <div class="clearfix" slot="header" style="text-align:center">
+                        <span style="color: cyan;font-size: 40px">登录</span>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>用户名</td>
+                            <td>
+                                <el-input placeholder="请输入用户名" v-model="user.name"></el-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>密码</td>
+                            <td>
+                                <el-input @keydown.enter.native="doLogin" placeholder="请输入密码" type="password"
+                                          v-model="user.pwd"></el-input>
+                                <!-- @keydown.enter.native="doLogin"当按下enter键的时候也会执行doLogin方法-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- 占两行-->
+                            <td colspan="2">
+                                <!-- 点击事件的两种不同的写法v-on:click和 @click-->
+                                <!--<el-button style="width: 300px" type="primary" v-on:click="doLogin">登录</el-button>-->
+                                <el-button @click="doLogin" style="width: 300px" type="primary">登录</el-button>
+                            </td>
+                        </tr>
+                    </table>
+                </el-card>
+            </div>
+        </div>
+    </template>
+</div>
+<!--引入vue.js-->
+<script src="../js/vue.js" type="text/javascript"></script>
+
+<!--引入 element js css-->
+<link href="../element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+<script src="../element-ui/lib/index.js" type="text/javascript"></script>
+<script src="../js/axios-0.18.0.js" type="text/javascript"></script>
+<!--<script type="text/javascript" src="js/login.js"></script>-->
+<style>
+    /*.el-header {*/
+    /*    background-color: #B3C0D1;*/
+    /*    color: #333;*/
+    /*    line-height: 60px;*/
+
+    /*}*/
+
+    html{
+        background-image: url("../img/5.webp");
+        /*background: url(images/background.jpg) no-repeat 0px 0px;*/
+        /*background-repeat: no-repeat;*/
+        background-size: 100% 100%;
+        -moz-background-size: 100% 100%;
+
+    }
+    /*.el-aside {*/
+    /*    !* background-color:#B3C0D1; *!*/
+    /*    color: #333;*/
+    /*}*/
+    #app{
+        /*background-color: brown;*/
+        opacity: 0.6;
+    }
+
+    input {
+        width: 300px;
+        height: 50px;
+    }
+</style>
+
+
+<script>
+    var app = new Vue({
+        el: "#app",
+
+        created() {
+            this.getAll();
+        },
+        //单页面中不支持前面的data:{}方式
+        data() {
+            //相当于以前的function data(){},这是es5之前的写法，新版本可以省略掉function
+            return {
+                //之前是在里面直接写username，password等等，但是这里要写return
+                //因为一个组件不管要不要被其他组件用，只要这样定义了，它就会认为可能这个组件会在其他的组件中使用
+                //比如说在这里定义了一个变量，然后把这个组件引入到A组件中，A组件中修改了这个变量
+                //同时这个组件也在B组件中引用了，这时候A里面一修改，B里面也变了，它们用的是一个值
+                //可是一般来说可能希望在不同的组件中引用的时候，使用不同的值，所以这里要用return
+                //这样在A组件和B组件分别引用这个变量的时候是不会互相影响的
+                user: {
+                    name: '',
+                    pwd: '',
+                    //为了登录方便，可以直接在这里写好用户名和密码的值
+                }
+            }
+        },
+        methods: {
+            doLogin() {//一点击登录按钮，这个方法就会执行
+                axios.post("/user/login", this.user).then((res) => {
+                    if (res.data!=1) {
+                        this.$message({
+                            message: '用户名或密码错误',
+                            type: 'error'
+                        });
+                        window.location.href = 'login.html'
+                    } else {
+                        this.$message({
+                            message: '登录成功',
+                            type: 'success'
+                        });
+                        window.location.href = 'house.html'
+                    }
+                })
+            }
+        }
+    });
+
+</script>
+
+
+</body>
+</html>
